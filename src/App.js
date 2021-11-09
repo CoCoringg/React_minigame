@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import './App.css';
+import axios from 'axios';
 export default App;
 
 var ranNums = [];
@@ -40,7 +47,17 @@ function App() {
       } else {}
     }setScore(tempscore); 
   }
-
+  
+  const [getMessage, setGetMessage] = useState({})
+  useEffect(()=>{
+    axios.get('http://localhost:5000/answers').then(response =>{
+      console.log("success", response)
+      setGetMessage(response.data)
+    }).catch(error => {
+      console.log(error)
+    })
+  },[])
+  
   const [dis, setDis] = useState(false);
   useEffect(()=>{
     console.log(newArray);
@@ -149,15 +166,18 @@ function App() {
       <button className = 'score' onClick={scoring}>채점</button>
       <button onClick={() => window.location.reload(false)}>뉴게임!</button>
     </div>
-    
+    {getMessage['answers']}
 
   </div>; }
     
   return (
-    <div>
-      <Square />
-      
-    </div>
+    <Router>
+      <Route>
+        <Link to='/'>
+          <Square />
+        </Link>
+      </Route>
+    </Router>
     
   );
 
